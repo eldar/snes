@@ -1,0 +1,189 @@
+config:
+  exp_path: exp/
+  exp_name: ""
+  file: "config.yaml"
+
+run:
+  debug: false
+
+gpu: 0
+mode: train
+is_continue: false
+fp16: true
+
+logging:
+  backend: "tensorboard"
+  entity: "conti-3d"
+  project: "ca3d"
+
+dataset:
+  type: co3d
+  data_dir: data/co3d
+  data_extra_dir: data/co3d_extra_data
+  category: car
+  instance:
+
+  min_depth: -1
+  use_auto_box: true
+  scaling_factor: 0.80
+  apply_scaling: True
+  trainval_split: false
+  split_file: "train_val_split.pkl"
+
+train:
+  learning_rate: 5e-4
+  learning_rate_alpha: 0.05
+  learning_rate_symmetry: 5e-4
+  learning_rate_variance: 5e-4
+  variance_optimiser: "Adam"
+
+  end_iter: 300000
+
+  multi_view_batch: true
+  batch_size: 1024
+  validate_resolution_level: 4
+  warm_up_end: 2500
+  anneal_end: 50000
+  use_white_bkgd: false
+
+  save_freq: 10000
+  val_freq: 2500
+  render_views_freq: 20000
+  val_mesh_freq: 5000
+  report_freq: 100
+  save_all_meshes: false
+
+  mask_weight: 0.0
+
+  color_diffuse_weight: 0.01
+  color_symmetric_lighting_weight: 0.001
+  eikonal_weight: 0.2
+  symmetricity: 0.1
+
+  init_model: ""
+  init_networks: []
+  freeze_symmetry_transform: false
+
+  ramp_lr_nets:
+    - "sdf_network"
+    - "specular_network"
+    - "specular_sym_network"
+  ramp_lr_start: 0.0
+
+  keep_old_checkpoints: false
+
+  render_types:
+    - SS
+    - ST
+    - TS
+    - TT
+
+  ground_retrieval_weight: 0.4 # weight applied to the z parameter to encourage it to return to its initial location
+  ground_retrieval_turnon_z: 0.1 # z value that triggers ground retrieval - the more positive, the further below the bounding box
+
+
+model:
+  nerf:
+    D: 8
+    d_in: 4
+    d_in_view: 3
+    W: 256
+    multires: 10
+    multires_view: 4
+    output_ch: 4
+    skips: [4]
+    use_viewdirs: true
+    rgb_bias: 0.5
+    alpha_bias: 0.0
+
+  sdf_network:
+    d_out: 257
+    d_in: 3
+    d_hidden: 256
+    n_layers: 8
+    skip_in: [4]
+    multires: 6
+    bias: 0.5
+    geometric_init: True
+    weight_norm: True
+
+  material_network:
+    d_in: 3
+    d_out: 4
+    n_layers: 4
+    d_feature: 256
+    d_hidden: 256
+    mode: points_feats
+    weight_norm: true
+    multires_view: 0
+
+  diffuse_network:
+    d_in: 6
+    d_out: 1
+    n_layers: 2
+    d_feature: 256
+    d_hidden: 256
+    mode: points_normals_feats
+    weight_norm: true
+    multires_view: 0
+
+  specular_network:
+    d_in: 9
+    d_out: 3
+    n_layers: 4
+    d_feature: 256
+    d_hidden: 256
+    mode: points_viewdirs_normals_feats
+    weight_norm: true
+    multires_view: 4
+
+  variance_network:
+    init_val: 0.3
+
+  renderer:
+    n_samples: 64
+    n_importance: 64
+    n_outside: 32
+    up_sample_steps: 4     # 1 for simple coarse-to-fine sampling
+    perturb: 1.0
+    learn_symmetry: true
+    symmetry_translation_1dof: false
+    symmetry_translation_2dof: true
+    symmetry_type: planar_reflection
+    symmetry_axis: 1
+    renderer: "renderer"
+    use_reflected_view_directions: false
+    scale_input_coords: true
+
+    fit_ground_plane: true
+    num_sdf_samples: 256
+    reuse_sdf_graph: false
+
+    late_sigmoid: false
+
+test:
+  mcube_threshold: 0.0
+  mcube_resolution: 500
+  mcube_render_road: false
+  web_vis: false
+  white_bkgd: false
+  nvs_resolution: 2
+  num_cams: 200
+  video_out_dir: "video"
+  nvs_cut_box: false
+  render_albedo: false
+  rendering_output: full
+  fixed_test_cameras: true
+  camera_image_size: [700, 1250]
+  camera_focal_length: [1150.0, 1150.0]
+  checkpoint: -1
+  frame_idx: 0
+  render_foreground_mask: false
+  pre_sphere_transparency: true
+  batch_size: 256
+  vis_symm_plane: False
+
+visualisation:
+  port: 8889
+  show_axes: false
+  show_bounding_box: false

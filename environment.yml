@@ -1,0 +1,34 @@
+name: snes
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.9
+  - numpy
+  - pytorch=1.11.0
+  - torchvision
+  - matplotlib
+  - cudatoolkit=11.3
+  - tensorboard
+  - scipy
+  - trimesh
+  - icecream
+  - plyfile
+  - tqdm
+  - imageio
+  - einops
+  - scikit-image
+  - scikit-learn
+  - neptune-client
+  - addict
+  - pandas
+  - omegaconf
+  - plotly
+  - pip
+  - pip:
+    - PyMCubes
+    - psutil
+    - scenepic
+    - pygltflib
+    - lpips
+    - https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py39_cu113_pyt1110/pytorch3d-0.6.2-cp39-cp39-linux_x86_64.whl
