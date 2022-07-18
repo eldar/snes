@@ -2,7 +2,7 @@
 
 Eldar Insafutdinov*, Dylan Campbell*, Joao F Henriques and Andrea Vedaldi. *ECCV 2022*
 
-[Paper](https://arxiv.org/abs/2206.06340)
+[Paper](https://arxiv.org/abs/2206.06340) | [Project page](https://www.robots.ox.ac.uk/~vgg/research/snes/)
 
 ![](figures/snes_teaser.png)
 
