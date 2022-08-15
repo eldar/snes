@@ -166,7 +166,6 @@ def raw_to_val(raw):
         val['albedo'] = torch.sigmoid(raw['albedo']) # (0, 1), init: 0.5
     if 'reflectivity' in raw:
         val['reflectivity'] = F.softplus(raw['reflectivity'], beta=100) # (0, inf), init: 0.0069
-        # val['reflectivity'] = squareplus(raw['reflectivity'], b=1e-4) # (0, inf), init: 0.005
     if 'specular' in raw:
         val['specular'] = torch.sigmoid(raw['specular']) # (0, 1), init: 0.5
     return val
