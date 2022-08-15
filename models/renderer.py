@@ -258,7 +258,6 @@ def raw_to_material(raw, with_sigmoid=True):
     if with_sigmoid:
         albedo_color = torch.sigmoid(albedo_color) # (0, 1), init: 0.5
         reflectivity = torch.sigmoid(reflectivity) # (0, 1), init: 0.5
-    # reflectivity = squareplus(raw[..., [3]], b=1e-4) # (0, inf), init: 0.005 # TODO
     return albedo_color, reflectivity
 
 
@@ -268,7 +267,6 @@ def raw_to_diffuse(raw, with_sigmoid=True):
     res = raw
     if with_sigmoid:
         res = 2.0 * torch.sigmoid(raw) # (0, 2), init: 1
-    # return squareplus(raw) # (0, inf), init: 1 # TODO
     return res
 
 
@@ -658,7 +656,6 @@ class Renderer:
         sdf_grad_input = sdf_fg() if cfg_p.reuse_sdf_graph else None
         gradients = self.sdf_network.gradient(pts(), sdf_grad_input).squeeze()
         gradients = as_sym_tensor(gradients)
-        # ToDo: unscale gradients? https://pytorch.org/docs/stable/notes/amp_examples.html#gradient-penalty
 
         colors = self.evaluate_color(pts, gradients, dirs, sdfnet_feats)
 
