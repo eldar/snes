@@ -158,23 +158,6 @@ def compute_diffuse_color(albedo, diffuse, clamp=True):
     return diffuse_color
 
 
-def raw_to_val(raw):
-    val = {}
-    if 'diffuse' in raw:
-        val['diffuse'] = 2.0 * torch.sigmoid(raw['diffuse']) # (0, 2), init: 1
-    if 'albedo' in raw:
-        val['albedo'] = torch.sigmoid(raw['albedo']) # (0, 1), init: 0.5
-    if 'reflectivity' in raw:
-        val['reflectivity'] = F.softplus(raw['reflectivity'], beta=100) # (0, inf), init: 0.0069
-    if 'specular' in raw:
-        val['specular'] = torch.sigmoid(raw['specular']) # (0, 1), init: 0.5
-    return val
-
-
-def squareplus(x, b=4.0):
-    return 0.5 * (x + (x ** 2 + b).sqrt())
-
-
 def compute_fg_mask(sdf, dists, dirs, gradients, inv_s, cos_anneal_ratio, n_samples):
     """ Compute the foreground mask for evaluation.
     """
